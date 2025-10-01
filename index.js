@@ -37,6 +37,7 @@ function extractBrandName(url) {
 
 // Fonction pour extraire les liens produits d'une page collection
 async function getProductLinks(url) {
+  console.log(`📂 Ouverture de la collection: ${url}`);
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
   const brand = $(".section-title h2").text().trim() || extractBrandName(url);
@@ -58,12 +59,14 @@ async function getProductLinks(url) {
     }
   });
 
+  console.log(`✅ ${products.length} produits trouvés pour ${brand}`);
   return products;
 }
 
 // Fonction pour checker si un produit est en stock
 async function checkStock(product) {
   try {
+    console.log(`🔎 Vérification stock: ${product.name}`);
     const { data } = await axios.get(product.url);
     const $ = cheerio.load(data);
 
@@ -75,10 +78,15 @@ async function checkStock(product) {
 
     return { ...product, status };
   } catch (err) {
-    console.error(`Erreur sur ${product.url}:`, err.message);
+    console.error(`❌ Erreur sur ${product.url}:`, err.message);
     return { ...product, status: "Error" };
   }
 }
+
+// Route par défaut
+app.get("/", (req, res) => {
+  res.send("🚀 API TunisiaMarka Scraper est en ligne. Essayez /stock pour voir les produits.");
+});
 
 // Route API
 app.get("/stock", async (req, res) => {
@@ -86,7 +94,7 @@ app.get("/stock", async (req, res) => {
     let allProducts = [];
 
     for (const url of collectionUrls) {
-      console.log(`🔎 Scraping ${url}...`);
+      console.log(`--- Scraping ${url} ---`);
       const products = await getProductLinks(url);
 
       // Vérifie stock pour chaque produit
@@ -100,9 +108,10 @@ app.get("/stock", async (req, res) => {
       return a.brand.localeCompare(b.brand);
     });
 
+    console.log(`📦 Total produits collectés: ${allProducts.length}`);
     res.json(allProducts);
   } catch (error) {
-    console.error("Erreur API:", error.message);
+    console.error("🔥 Erreur API:", error.message);
     res.status(500).json({ error: "Erreur lors du scraping" });
   }
 });

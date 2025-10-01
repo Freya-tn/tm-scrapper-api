@@ -3,7 +3,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4001;
 
 const collectionUrls = [
   "https://tunisiamarka.com.tn/brands-18-Anua.html",

@@ -109,7 +109,13 @@ app.get("/stock", async (req, res) => {
     });
 
     console.log(`📦 Total produits collectés: ${allProducts.length}`);
-    res.json(allProducts);
+
+    // ⚡ Retour adapté pour snapshot Mongo
+    res.json({
+      date: new Date().toISOString(),
+      total: allProducts.length,
+      products: allProducts
+    });
   } catch (error) {
     console.error("🔥 Erreur API:", error.message);
     res.status(500).json({ error: "Erreur lors du scraping" });

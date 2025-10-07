@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import fs from "fs/promises";
 import { parsePrice, isFreyaVariantAvailable } from "./helpers.js";
 const PRODUCTS_PATH = "./products.json";
-const SHOPIFY_API_URL = "http://13.39.45.220:3000/shopify/products";
+const SHOPIFY_API_URL = process.env.SHOPIFY_API;
 
 
 const app = express();

@@ -1,3 +1,4 @@
 node_modules
 old.index.js
 stock_tm.csv
+.env

@@ -7,16 +7,14 @@ import dotenv from "dotenv";
 import fs from "fs/promises";
 import { parsePrice, isFreyaVariantAvailable } from "./helpers.js";
 const PRODUCTS_PATH = "./products.json";
-const SHOPIFY_API_URL = process.env.SHOPIFY_API;
 
 
 const app = express();
 const PORT = process.env.PORT || 4001;
 dotenv.config();
 app.use(cors());
-// --- MongoDB ---
-const MONGO_URI =
-  process.env.MONGO_URI
+const MONGO_URI = process.env.MONGO_URI;
+const SHOPIFY_API_URL = process.env.SHOPIFY_API;
 
 mongoose
   .connect(MONGO_URI)

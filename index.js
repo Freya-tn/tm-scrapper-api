@@ -24,6 +24,10 @@ mongoose
 const TMStockSchema = new mongoose.Schema({}, { strict: false });
 const TMStock = mongoose.model("TM-Stock", TMStockSchema, "TM-Stock");
 
+// --- Collection Freya-Stock ---
+const FreyaStockSchema = new mongoose.Schema({}, { strict: false });
+const FreyaStock = mongoose.model("Freya-Stock", FreyaStockSchema, "Freya-Stock");
+
 const collectionUrls = [
   "https://tunisiamarka.com.tn/brands-18-Anua.html",
   "https://tunisiamarka.com.tn/brands-6-Cosrx-1.html",
@@ -296,6 +300,25 @@ app.get("/compare", async (req, res) => {
   } catch (error) {
     console.error("❌ Error in /compare:", error.message);
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/freya-stock", async (req, res) => {
+  try {
+    const latestFreyaStock = await FreyaStock.findOne().sort({ date: -1 });
+
+    if (!latestFreyaStock) {
+      return res.status(404).json({ error: "No Freya stock data found in MongoDB" });
+    }
+
+    res.json({
+      date: latestFreyaStock.date,
+      total: latestFreyaStock.products?.length || 0,
+      products: latestFreyaStock.products || [],
+    });
+  } catch (error) {
+    console.error("❌ Error fetching Freya stock:", error.message);
+    res.status(500).json({ error: "Error fetching Freya stock data" });
   }
 });
 
